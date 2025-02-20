@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Video Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         body { text-align: center; font-family: Arial, sans-serif; }
         .video-container { max-width: 800px; margin: auto; position: relative; }
@@ -15,10 +16,7 @@
 <body>
     <h2>Custom Video Player</h2>
     <div class="video-container">
-        <video id="video" controls>
-            <source src="https://live.tsports.com/mobile_hls/tsports_live_2/playlist.m3u8" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+        <video id="video" controls></video>
     </div>
     <div class="controls">
         <button onclick="playVideo()">Play</button>
@@ -29,19 +27,30 @@
     
     <script>
         const video = document.getElementById("video");
-        
+        const videoSrc = "https://live.tsports.com/mobile_hls/tsports_live_2/playlist.m3u8";
+
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoSrc;
+        } else {
+            alert("Your browser does not support HLS streaming.");
+        }
+
         function playVideo() {
             video.play();
         }
-        
+
         function pauseVideo() {
             video.pause();
         }
-        
+
         function toggleMute() {
             video.muted = !video.muted;
         }
-        
+
         function toggleFullscreen() {
             if (video.requestFullscreen) {
                 video.requestFullscreen();
