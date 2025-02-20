@@ -3,33 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4K Streamz Live Chat</title>
-    <script src="server.js"></script>
+    <title>Custom Video Player</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        #messages { height: 300px; overflow-y: scroll; border: 1px solid #ddd; padding: 10px; }
-        input { width: 80%; padding: 10px; }
+        body { text-align: center; font-family: Arial, sans-serif; }
+        .video-container { max-width: 800px; margin: auto; position: relative; }
+        video { width: 100%; border-radius: 8px; }
+        .controls { display: flex; justify-content: center; margin-top: 10px; gap: 10px; }
+        button { padding: 8px 12px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <h1>4K Streamz Live Chat</h1>
-    <div id="messages"></div>
-    <input id="message" placeholder="Type a message..." />
-    <button onclick="sendMessage()">Send</button>
-
+    <h2>Custom Video Player</h2>
+    <div class="video-container">
+        <video id="video" controls>
+            <source src="video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="controls">
+        <button onclick="playVideo()">Play</button>
+        <button onclick="pauseVideo()">Pause</button>
+        <button onclick="toggleMute()">Mute</button>
+        <button onclick="toggleFullscreen()">Fullscreen</button>
+    </div>
+    
     <script>
-        const socket = io();
-
-        socket.on("chat message", (msg) => {
-            let div = document.createElement("div");
-            div.textContent = msg;
-            document.getElementById("messages").appendChild(div);
-        });
-
-        function sendMessage() {
-            let msg = document.getElementById("message").value;
-            socket.emit("chat message", msg);
-            document.getElementById("message").value = "";
+        const video = document.getElementById("video");
+        
+        function playVideo() {
+            video.play();
+        }
+        
+        function pauseVideo() {
+            video.pause();
+        }
+        
+        function toggleMute() {
+            video.muted = !video.muted;
+        }
+        
+        function toggleFullscreen() {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.mozRequestFullScreen) {
+                video.mozRequestFullScreen();
+            }
         }
     </script>
 </body>
